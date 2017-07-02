@@ -3,6 +3,8 @@ package com.rjstudio.bluetoothtestdemo;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothSocket;
+import android.os.Handler;
+import android.os.Message;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -44,6 +46,16 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private BTConnectionClient btConnectionClient;
     private BTConnectionServer btConnectionServer;
 
+    private Handler myHandler = new Handler()
+    {
+        @Override
+        public void handleMessage(Message msg) {
+            super.handleMessage(msg);
+            textView.setText(msg.obj.toString());
+        }
+
+
+    };
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -112,7 +124,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         //本机作为客户端
         BluetoothDevice clientDevice = ba.getRemoteDevice(bluetoothAddress);
         Log.d(TAG, "本机是"+clientDevice.getName()+"---"+clientDevice.getAddress()+"----"+clientDevice);
-        cs = new ClientSocket(clientDevice,uuid);
+        cs = new ClientSocket(clientDevice,uuid,myHandler);
         //开启线程,去申请与服务器连接
        // cs.start();
         cs.start();
@@ -128,7 +140,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     {
         textView.setBackgroundColor(getResources().getColor(R.color.serve));
         BluetoothAdapter ba = BluetoothAdapter.getDefaultAdapter();
-        ss = new ServerSocket(ba,uuid);
+        ss = new ServerSocket(ba,uuid,myHandler);
         ss.start();
         btConnectionServer = ss.getBTConnectionServer();
         isClient = false;

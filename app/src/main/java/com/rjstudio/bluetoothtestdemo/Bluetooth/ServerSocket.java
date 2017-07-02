@@ -4,6 +4,7 @@ import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothServerSocket;
 import android.bluetooth.BluetoothSocket;
+import android.os.Handler;
 import android.util.Log;
 
 import com.rjstudio.bluetoothtestdemo.Bluetooth.Sever.BTConnectionServer;
@@ -31,6 +32,7 @@ public class ServerSocket extends Thread{
 
     private BTConnectionServer btConnectionServer;
     private ConnectionThread connectionThread;
+    private Handler handler;
     //读取操作所需要的数据
 
 
@@ -48,6 +50,23 @@ public class ServerSocket extends Thread{
             Log.d(TAG, "ServerSocket: 无法创建BluetoothServiceSocket");
         }
     }
+
+    public ServerSocket(BluetoothAdapter bluetoothAdapter, UUID uuid, Handler handler) {
+        this.uuid = uuid;
+        this.handler = handler;
+        Log.d(TAG, "ServerSocket: UUID is "+ uuid.toString());
+        try
+        {
+            this.bluetoothServerSocket = bluetoothAdapter.listenUsingRfcommWithServiceRecord("MyService",uuid);
+            //需要权限
+        }
+        catch (Exception e)
+        {
+            this.bluetoothServerSocket = null;
+            Log.d(TAG, "ServerSocket: 无法创建BluetoothServiceSocket");
+        }
+    }
+
 
     public UUID getUUIDFromServerSock()
     {
@@ -76,7 +95,7 @@ public class ServerSocket extends Thread{
                 //btConnectionServer = new BTConnectionServer(inputStream,outputStream);
 
                 //----方案二
-                connectionThread = new ConnectionThread(bluetoothSocket);
+                connectionThread = new ConnectionThread(bluetoothSocket,handler);
                 Log.d(TAG, "createServiceSocket: 创建服务器Socket成功.");
             }
             catch (Exception e)

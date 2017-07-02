@@ -1,6 +1,8 @@
 package com.rjstudio.bluetoothtestdemo.Bluetooth;
 
 import android.bluetooth.BluetoothSocket;
+import android.os.Handler;
+import android.os.Message;
 import android.util.Log;
 
 import java.io.BufferedReader;
@@ -28,6 +30,7 @@ public class ConnectionThread extends Thread {
     private BufferedReader br;
 
     private String tempContent = "这里是ConnectionThread的,这在发送给另外一端一条信息.";
+    private Handler handler;
 
     public ConnectionThread(BluetoothSocket bluetoothSocket) {
 
@@ -50,6 +53,28 @@ public class ConnectionThread extends Thread {
             Log.d(TAG, "ConnectionThread: 无法获取到输入/输出流.");
         }
     
+    }
+    public ConnectionThread(BluetoothSocket bluetoothSocket, Handler handler) {
+        this.handler = handler;
+        this.bluetoothSocket = bluetoothSocket;
+        inputStream = null;
+        outputStream = null;
+
+        try
+        {
+            this.inputStream = bluetoothSocket.getInputStream();
+            this.outputStream = bluetoothSocket.getOutputStream();
+            byte[] temp = tempContent.getBytes();
+            outputStream.write(temp);
+//            isr = new InputStreamReader(inputStream);
+//            br = new BufferedReader(isr);
+            Log.d(TAG, "ConnectionThread: 初始化成功.");
+        }
+        catch (Exception e)
+        {
+            Log.d(TAG, "ConnectionThread: 无法获取到输入/输出流.");
+        }
+
     }
 
     @Override
@@ -78,8 +103,10 @@ public class ConnectionThread extends Thread {
 
             bytes = inputStream.read(buff);
             Log.d(TAG, "receiveMessage: bytes "+bytes);
-            receiveContent = new String(buff,"utf-8");
-
+            receiveContent = new String(buff,0,bytes);
+            Message msg = new Message();
+            msg.obj = receiveContent;
+            handler.sendMessage(msg);
             Log.d(TAG, "receiveMessage: "+receiveContent);
 
 //            Log.d(TAG, "receiveMessage: "+receiveContent);

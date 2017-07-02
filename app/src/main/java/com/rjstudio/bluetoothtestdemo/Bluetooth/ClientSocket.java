@@ -2,6 +2,7 @@ package com.rjstudio.bluetoothtestdemo.Bluetooth;
 
 import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothSocket;
+import android.os.Handler;
 import android.util.Log;
 
 import com.rjstudio.bluetoothtestdemo.Bluetooth.Client.BTConnectionClient;
@@ -26,10 +27,16 @@ public class ClientSocket extends Thread{
     private OutputStream os;
     private InputStream is;
     private ConnectionThread connectionThread;
+    private Handler handler;
 
     public ClientSocket(BluetoothDevice device, UUID uuid) {
         this.device = device;
         this.uuid = uuid;
+    }
+    public ClientSocket(BluetoothDevice device, UUID uuid, Handler handler) {
+        this.device = device;
+        this.uuid = uuid;
+        this.handler = handler;
     }
 
     public void createBluetoothSocket()
@@ -43,7 +50,7 @@ public class ClientSocket extends Thread{
             this.is = bluetoothSocket.getInputStream();
             sendMessage("这是客户端,发送给服务器端一条消息.");
             //btConnectionClient = new BTConnectionClient(bluetoothSocket);
-            connectionThread = new ConnectionThread(bluetoothSocket);
+            connectionThread = new ConnectionThread(bluetoothSocket,handler);
             Log.d(TAG, "C端连接成功");
         }
         catch (Exception e )
