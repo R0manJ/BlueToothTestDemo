@@ -51,11 +51,13 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         @Override
         public void handleMessage(Message msg) {
             super.handleMessage(msg);
-            textView.setText(msg.obj.toString());
+            textView.setText(CorS+""+msg.obj.toString());
         }
 
 
     };
+    private com.rjstudio.bluetoothtestdemo.BluetoothOperateDemo.Socket.ClientSocket c;
+    private com.rjstudio.bluetoothtestdemo.BluetoothOperateDemo.Socket.ServerSocket s;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -91,18 +93,20 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             case R.id.bu_send:
                 //Log.d(TAG, "onClick: send");
                 //Toast.makeText(this, "send", Toast.LENGTH_SHORT).show();
-                sendLogic();
+                //sendLogic();
+                send();
                 break;
             case R.id.bu_c:
                 Log.d(TAG, "onClick: client");
-
                 Toast.makeText(this, "client", Toast.LENGTH_SHORT).show();
-                initClient();
+              //  initClient();
+                initC();
                 break;
             case R.id.bu_s:
                 Log.d(TAG, "onClick: serve");
                 Toast.makeText(this, "serve", Toast.LENGTH_SHORT).show();
-                initServer();
+                //initServer();
+                initS();
                 break;
         }
     }
@@ -170,8 +174,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        connectionThread.closeResource();
-        ss.close();
+        if (c != null) c.close();
+        if (s != null) s.close();
     }
 
     public void SearchBlueTooth()
@@ -193,4 +197,41 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             }
         });
     }
+    private String CorS = null;
+//New class
+    public void initC()
+    {
+        CorS = "Client 接收到的是";
+        textView.setBackgroundColor(getResources().getColor(R.color.serve));
+        BluetoothAdapter ba = BluetoothAdapter.getDefaultAdapter();
+        if (bluetoothAddress == null) return;
+        c = new com.rjstudio.bluetoothtestdemo.BluetoothOperateDemo.Socket.ClientSocket(ba.getRemoteDevice(bluetoothAddress),uuid,myHandler);
+        c.start();
+    }
+    public void initS()
+    {
+        CorS = "Server 接收到的是";
+        textView.setBackgroundColor(getResources().getColor(R.color.serve));
+        BluetoothAdapter ba = BluetoothAdapter.getDefaultAdapter();
+        s = new com.rjstudio.bluetoothtestdemo.BluetoothOperateDemo.Socket.ServerSocket(ba,uuid,myHandler);
+        s.start();
+        Log.d(TAG, "initServer: 服务器端初始化完成");
+    }
+
+    public void send()
+    {
+        String tempContent = editText.getText().toString();
+        Log.d(TAG, "sendLogic: " +tempContent);
+        if (c != null)
+        {
+            c.sendMessage(tempContent);
+        }
+        else
+        {
+            s.sendMessage(tempContent);
+        }
+        editText.setText("");
+    }
+
+
 }

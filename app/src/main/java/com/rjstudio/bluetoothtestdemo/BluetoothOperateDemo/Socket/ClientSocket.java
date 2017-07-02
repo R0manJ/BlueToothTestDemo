@@ -34,6 +34,7 @@ public class ClientSocket extends Thread {
             //TODO : 这里有两方法 ,先用第IO流操作个类,直接传入一个socket
             // 剩下的事情交给另外一个类来做
             socketIOOperate = new SocketIOOperate(bluetoothSocket,handler);
+            socketIOOperate.start();
         }
         catch (Exception e)
         {
@@ -51,6 +52,7 @@ public class ClientSocket extends Thread {
     {
         try
         {
+            socketIOOperate.close();
             bluetoothSocket.close();
         }
         catch (Exception e)

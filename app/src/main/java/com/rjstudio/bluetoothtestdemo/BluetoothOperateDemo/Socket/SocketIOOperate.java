@@ -63,6 +63,7 @@ public class SocketIOOperate extends Thread{
             catch (Exception e)
             {
                 e.printStackTrace();
+                break;
             }
         }
     }
@@ -88,5 +89,20 @@ public class SocketIOOperate extends Thread{
     @Override
     public void run() {
         listenerContent();
+    }
+
+    public void close()
+    {
+        try
+        {
+            inputStream.close();
+            outputStream.close();
+            bluetoothSocket.close();
+        }
+        catch (Exception e)
+        {
+            e.printStackTrace();
+        }
+
     }
 }
