@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="colorPrimary">#3F51B5</color>
+    <color name="colorPrimaryDark">#303F9F</color>
+    <color name="colorAccent">#FF4081</color>
+
+    <!--三种模式的配色-->
+
+    <color name="client">#ac6ae178</color>
+    <color name="serve">#ac8aa5f1</color>
+    <color name="normal">#332e3339</color>
+</resources>
