@@ -30,6 +30,7 @@ public class ServerSocket extends Thread{
     private OutputStream outputStream;
 
     private BTConnectionServer btConnectionServer;
+    private ConnectionThread connectionThread;
     //读取操作所需要的数据
 
 
@@ -71,8 +72,11 @@ public class ServerSocket extends Thread{
                 this.outputStream = bluetoothSocket.getOutputStream();
                 this.inputStream = bluetoothSocket.getInputStream();
                 sendMessage("这是服务器端,发送给客户端一条消息.");
-                btConnectionServer = new BTConnectionServer(bluetoothSocket);
+                //btConnectionServer = new BTConnectionServer(bluetoothSocket);
                 //btConnectionServer = new BTConnectionServer(inputStream,outputStream);
+
+                //----方案二
+                connectionThread = new ConnectionThread(bluetoothSocket);
                 Log.d(TAG, "createServiceSocket: 创建服务器Socket成功.");
             }
             catch (Exception e)
@@ -87,6 +91,10 @@ public class ServerSocket extends Thread{
         }
     }
 
+    public ConnectionThread getConnectionThread()
+    {
+        return connectionThread;
+    }
     @Override
     public void run() {
         //已经创建好服务器ServiceSocket了
@@ -94,7 +102,8 @@ public class ServerSocket extends Thread{
         Log.d(TAG, "run: waiting......");
         createServiceSocket();
         Log.d(TAG, "S端连接成功!!");
-        btConnectionServer.start();
+        //btConnectionServer.start();
+        connectionThread.start();
         Log.d(TAG, "在S端中 启动了数据读写线程.");
 
         try

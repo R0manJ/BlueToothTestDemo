@@ -141,13 +141,15 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         Log.d(TAG, "sendLogic: " +tempContent);
         if (isClient)
         {
-            cs.sendMessage(tempContent);
+            cs.getConnectionThread().sendMessage(tempContent);
+            //cs.sendMessage(tempContent);
             //btConnectionClient.sendMessage(tempContent);//NullPointException
 
         }
         else
         {
-            ss.sendMessage(tempContent);
+            ss.getConnectionThread().sendMessage(tempContent);
+            //ss.sendMessage(tempContent);
             //btConnectionServer.sendMessage(tempContent); //NullPointException
         }
         editText.setText("");

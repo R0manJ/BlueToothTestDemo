@@ -27,6 +27,8 @@ public class ConnectionThread extends Thread {
     private InputStreamReader isr;
     private BufferedReader br;
 
+    private String tempContent = "这里是ConnectionThread的,这在发送给另外一端一条信息.";
+
     public ConnectionThread(BluetoothSocket bluetoothSocket) {
 
         this.bluetoothSocket = bluetoothSocket;
@@ -36,7 +38,9 @@ public class ConnectionThread extends Thread {
         try
         {
             this.inputStream = bluetoothSocket.getInputStream();
-
+            this.outputStream = bluetoothSocket.getOutputStream();
+            byte[] temp = tempContent.getBytes();
+            outputStream.write(temp);
 //            isr = new InputStreamReader(inputStream);
 //            br = new BufferedReader(isr);
             Log.d(TAG, "ConnectionThread: 初始化成功.");
@@ -88,6 +92,7 @@ public class ConnectionThread extends Thread {
         }
         catch (Exception e)
         {
+            e.printStackTrace();
            Log.d(TAG, "receiveMessage: 无法读取信息");
         }
     }
@@ -101,7 +106,7 @@ public class ConnectionThread extends Thread {
             outputStream = bluetoothSocket.getOutputStream();
             outputStream.write(bytes);
             outputStream.flush();
-            outputStream.close();
+           // outputStream.close();
 //            outputStream.write(-1);
             //outputStream.flush();//这个方法有什么用?
 

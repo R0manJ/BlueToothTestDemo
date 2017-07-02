@@ -25,6 +25,7 @@ public class ClientSocket extends Thread{
     //-----------
     private OutputStream os;
     private InputStream is;
+    private ConnectionThread connectionThread;
 
     public ClientSocket(BluetoothDevice device, UUID uuid) {
         this.device = device;
@@ -41,7 +42,8 @@ public class ClientSocket extends Thread{
             this.os = bluetoothSocket.getOutputStream();
             this.is = bluetoothSocket.getInputStream();
             sendMessage("这是客户端,发送给服务器端一条消息.");
-            btConnectionClient = new BTConnectionClient(bluetoothSocket);
+            //btConnectionClient = new BTConnectionClient(bluetoothSocket);
+            connectionThread = new ConnectionThread(bluetoothSocket);
             Log.d(TAG, "C端连接成功");
         }
         catch (Exception e )
@@ -52,7 +54,10 @@ public class ClientSocket extends Thread{
         }
     }
 
-
+    public ConnectionThread getConnectionThread()
+    {
+        return connectionThread;
+    }
     @Override
     public void run() {
         //receiveMessage();
@@ -63,7 +68,8 @@ public class ClientSocket extends Thread{
             return;
         }
         //this.btConnectionClient = new BTConnectionClient(is,os);
-        btConnectionClient.start();
+//        btConnectionClient.start();
+        connectionThread.start();
         Log.d(TAG, "在C端中 启动了数据读写线程.");
     }
 
