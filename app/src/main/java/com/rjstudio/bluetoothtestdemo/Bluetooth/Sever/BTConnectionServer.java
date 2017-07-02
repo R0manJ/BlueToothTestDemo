@@ -57,19 +57,21 @@ public class BTConnectionServer extends Thread {
         {
             Log.d(TAG, "startListenClient: 创建InputStream失败");
         }
+
         try
         {
+            buff = new byte[1024];
             bytes = inputStream.read(buff);
             if (bytes == -1) {
                 Log.d(TAG, "startListenClient: nothing");
             }
             receiveContent = new String(buff,"utf-8");
-            //Log.d(TAG, "接受到的内容是"+receiveContent);
+            Log.d(TAG, "接受到的内容是"+receiveContent);
             //inputStream.close();
         }
         catch (Exception e)
         {
-           // e.printStackTrace();
+            e.printStackTrace();
            // Log.d(TAG, "读取数据失败,退出监听.");
             //inputStream = null;
         }

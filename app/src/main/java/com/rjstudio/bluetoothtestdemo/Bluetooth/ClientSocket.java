@@ -40,6 +40,7 @@ public class ClientSocket extends Thread{
             bluetoothSocket.connect();
             this.os = bluetoothSocket.getOutputStream();
             this.is = bluetoothSocket.getInputStream();
+            sendMessage("这是客户端,发送给服务器端一条消息.");
             btConnectionClient = new BTConnectionClient(bluetoothSocket);
             Log.d(TAG, "C端连接成功");
         }
@@ -89,6 +90,7 @@ public class ClientSocket extends Thread{
         }
         catch (Exception e)
         {
+            e.printStackTrace();
             Log.d(TAG, "sendMessage: 写入失败");
         }
 

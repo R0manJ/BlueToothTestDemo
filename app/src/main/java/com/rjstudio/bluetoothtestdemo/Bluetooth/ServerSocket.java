@@ -68,8 +68,9 @@ public class ServerSocket extends Thread{
                 bluetoothSocket = bluetoothServerSocket.accept();
                 Log.d(TAG, "createServiceSocket: 创建服务器Socket成功.");
 
-                //this.outputStream = bluetoothSocket.getOutputStream();
-                //this.inputStream = bluetoothSocket.getInputStream();
+                this.outputStream = bluetoothSocket.getOutputStream();
+                this.inputStream = bluetoothSocket.getInputStream();
+                sendMessage("这是服务器端,发送给客户端一条消息.");
                 btConnectionServer = new BTConnectionServer(bluetoothSocket);
                 //btConnectionServer = new BTConnectionServer(inputStream,outputStream);
                 Log.d(TAG, "createServiceSocket: 创建服务器Socket成功.");
@@ -141,6 +142,7 @@ public class ServerSocket extends Thread{
         }
         catch (Exception e)
         {
+            e.printStackTrace();
             Log.d(TAG, "sendMessage: 写入失败");
         }
 

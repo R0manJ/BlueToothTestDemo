@@ -42,7 +42,7 @@ public class BTConnectionClient extends Thread {
     public void run() {
         while (true)
         {
-            //Log.d(TAG, "接受到的内容是"+receiveContent);
+            Log.d(TAG, "这里是run方法 的 接受到的内容是"+receiveContent);
             startListenClient();
         }
     }
@@ -53,34 +53,17 @@ public class BTConnectionClient extends Thread {
         {
            // if (inputStream == null)
 //            inputStream = bluetoothSocket.getInputStream();
+            buff = new byte[1024];
             bytes = inputStream.read(buff);
             receiveContent = new String(buff,"utf-8");
             Log.d(TAG, "startListenClient: "+receiveContent);
         }
         catch (Exception e)
         {
-            //e.printStackTrace();
+            e.printStackTrace();
            // Log.d(TAG, "startListenClient: 创建InputStream失败");
         }
 
-
-        try
-        {
-                bytes = inputStream.read(buff);
-            if (bytes == -1) {
-                Log.d(TAG, "startListenClient: nothing");
-            }
-                receiveContent = new String(buff,"utf-8");
-                //Log.d(TAG, "接受到的内容是"+receiveContent);
-                //inputStream.close();
-        }
-        catch (Exception e)
-        {
-               // Log.d(TAG, "读取数据失败,退出监听.");
-               // inputStream = null;
-                //e.printStackTrace();
-
-        }
     }
 
     public void sendMessage(String message)
